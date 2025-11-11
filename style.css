@@ -1,0 +1,390 @@
+/* --- Body avec logos Akatsuki en arrière-plan (pour TOUTES les pages) --- */
+body {
+    font-family: system-ui, sans-serif;
+    background-color: #1a1a1a;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+
+    min-height: 100vh;
+    position: relative; 
+    
+    /* 15 NUAGES EN FOND (Le 16ème est le lien cliquable en HTML, à 5% 5%) */
+    background-image: 
+        url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'),
+        url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), 
+        url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), 
+        url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), 
+        url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'), url('img/Akatsuki-Logo.png'); /* 15 URLs */
+    
+    background-repeat: no-repeat;
+    
+    /* 15 positions dispersées (la position 5% 5% est absente) */
+    background-position: 
+        70% 85%, 10% 70%, 60% 60%, 50% 90%, 
+        20% 40%, 90% 30%, 40% 15%, 85% 10%, 15% 95%, 
+        30% 55%, 70% 20%, 5% 45%, 95% 75%, 35% 5%,
+        65% 95%; 
+    
+    background-size: 80px auto; /* Taille des nuages de fond */
+}
+
+/* ========================================================== */
+/* STYLE DU NUAGE CLICQUABLE (Positionné séparément) */
+/* ========================================================== */
+.clickable-cloud {
+    position: fixed; 
+    /* ASSUREZ-VOUS QUE LA TAILLE EST DÉFINIE ! */
+    width: 80px; 
+    height: 80px; 
+    
+    /* VÉRIFIEZ LE CHEMIN VERS L'IMAGE ! */
+    background-image: url('img/Akatsuki-Logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    
+    filter: none; 
+    z-index: 10; 
+
+    /* La position que vous avez choisie */
+    top: 85%; /* Exemple: Bas-Gauche */
+    left: 10%;
+    
+    display: block;
+    cursor: pointer;
+    text-indent: -9999px; 
+}
+
+
+/* --- Header / Footer / Main avec transparence --- */
+header, main, footer {
+    background: rgba(13, 13, 13, 0.85);
+    color: #f44336;
+    text-align: center;
+    padding: 1.2em 0;
+    /* Assure que le contenu est au-dessus des nuages */
+    position: relative;
+    z-index: 100;
+}
+
+/* --- Footer collé en bas --- */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+/* --- Main content --- */
+main {
+    max-width: 1200px; 
+    margin: 2em auto 60px; 
+    background: rgba(31, 31, 31, 0.85);
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+}
+
+
+/* --- Header logo et titre --- */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.header-text h1 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #f44336;
+}
+
+.header-text p {
+    margin: 4px 0 0;
+    color: #ccc;
+    font-size: 0.95em;
+}
+
+/* --- Conteneur pour centrer les boutons (Page Index / Secret) --- */
+.center-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    display: block;
+    padding: 12px 20px;
+    background-color: #e74c3c;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.nav-btn:hover {
+    background-color: #c0392b;
+}
+
+/* --- Titres --- */
+h1, h2 {
+    color: #f44336;
+}
+
+/* --- Textarea --- */
+textarea {
+    width: 100%;
+    height: 150px;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    font-family: monospace;
+    background: #2a2a2a;
+    border: 1px solid #f44336;
+    color: #fff;
+    border-radius: 6px;
+}
+
+/* --- Buttons (Standard) --- */
+button {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 0.6em 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button.secondary {
+    background: #555;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+/* --- Hints --- */
+.hint {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+/* --- Modales / Popup --- */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+}
+
+.modal[aria-hidden="false"] {
+    display: flex;
+}
+
+.modal-panel {
+    background: rgba(42, 42, 42, 0.95);
+    width: 95%;
+    max-width: 420px;
+    padding: 1.25rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    border: 2px solid #f44336;
+}
+
+.modal-panel h2 {
+    margin-top: 0;
+    color: #f44336;
+}
+
+.modal-panel label { 
+    display:block; 
+    margin-top:0.75rem; 
+    font-weight:600; 
+    color: #eee;
+}
+
+.modal-panel input {
+    width:100%;
+    padding:0.5rem;
+    margin-top:0.25rem;
+    box-sizing:border-box;
+    border: 1px solid #f44336;
+    border-radius:6px;
+    background: #1f1f1f;
+    color: #fff;
+}
+
+.modal-row {
+    display:flex;
+    gap:0.5rem;
+    margin-top:1rem;
+    justify-content:flex-end;
+}
+
+.error { 
+    color:#ff5555; 
+    margin-top:0.6rem; 
+}
+
+/* --- Header actions --- */
+.header-actions { 
+    position:absolute; 
+    top:12px; 
+    right:12px; 
+}
+
+#logoutBtn { 
+    background:#d73a49; 
+}
+
+/* --- Bouton de retour à l'accueil (sur la page members et secret) --- */
+.home-btn-container {
+    text-align: center;
+    margin: 20px 0 60px;
+}
+
+.home-btn-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    background: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+/* ========================================================== */
+/* STYLES SPÉCIFIQUES À SECRET.HTML */
+/* ========================================================== */
+.logo-secret {
+    width: 80px; /* Taille réduite */
+    height: auto;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite; 
+    filter: drop-shadow(0 0 10px #f44336);
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* ========================================================== */
+/* STYLES POUR LES CARTES MEMBRES (PAGE members.html) */
+/* ========================================================== */
+
+.team {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    gap: 20px; 
+    padding: 10px 0;
+    max-width: 1160px; 
+    margin: 0 auto 60px; 
+}
+
+.member {
+    background: #2a2a2a; 
+    border: 3px solid #f44336;
+    border-radius: 12px;
+    padding: 15px;
+    width: calc(25% - 15px); 
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: #eee;
+}
+
+.member img {
+    width: 100%;
+    height: 200px; 
+    border-radius: 8px;
+    margin-bottom: 10px;
+    object-fit: contain; 
+    background-color: black; 
+    border: 1px solid #555;
+}
+
+.member h2 {
+    color: #f44336;
+    margin: 5px 0 10px;
+    font-size: 1.3em; 
+}
+
+.member p {
+    margin: 5px 0;
+    text-align: left;
+    padding-left: 10px;
+    border-left: 3px solid #f44336;
+}
+
+.member strong {
+    color: #ccc;
+}
+
+.member ul {
+    list-style: none; 
+    padding-left: 0;
+    margin-top: 5px;
+    margin-bottom: 0;
+    border-left: 3px solid #f44336; 
+    padding-left: 10px;
+}
+
+.member li {
+    text-align: left;
+    position: relative;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.member li:before {
+    content: "•"; 
+    color: #f44336; 
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}

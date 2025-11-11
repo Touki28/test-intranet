@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Intranet Collaboratif</title>
+    
+    <link rel="icon" type="image/png" href="img/Akatsuki-Logo.png"/> 
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script>
+    const SESSION_KEY = "intranet_auth_ok_v2";
+    if(!sessionStorage.getItem(SESSION_KEY)){
+        window.location.href = "login.html";
+    }
+</script>
+
+<a href="secret.html" class="clickable-cloud" aria-label="Lien caché dans un nuage Akatsuki"></a>
+
+<header>
+    <div class="header-content">
+        <img src="img/Akatsuki-Logo.png" alt="Logo Akatsuki" class="logo">
+        <div class="header-text">
+            <h1>Bienvenue sur l’Intranet de l'Akakatsuki</h1>
+        </div>
+        <img src="img/Akatsuki-Logo.png" alt="Logo Akatsuki" class="logo">
+    </div>
+    <div class="header-actions">
+        <button id="logoutBtn" style="display:none;">Se déconnecter</button>
+    </div>
+</header>
+
+<main>
+    <div class="center-buttons">
+        <div class="buttons-container">
+            <a href="membres.html" class="nav-btn">Membres de l'Akatsuki</a>
+        </div>
+    </div>
+</main>
+
+<div class="logout-container">
+    <button onclick="sessionStorage.removeItem('intranet_auth_ok_v2'); window.location.href='login.html';">
+        Se déconnecter
+    </button>
+</div>
+
+<footer>
+    <p>&copy; 2025 Akakatsuki Intranet</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
