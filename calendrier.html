@@ -252,8 +252,8 @@
                 }
                 current = null;
             } else if (current) {
-                if (line.startsWith('DTSTART')) current.start = parseICSDate(line.split(':')[1]);
-                if (line.startsWith('DTEND')) current.end = parseICSDate(line.split(':')[1]);
+                if (line.startsWith('DTSTART')) current.start = parseICSDate(line);
+                if (line.startsWith('DTEND')) current.end = parseICSDate(line);
                 if (line.startsWith('SUMMARY')) current.summary = line.split(':')[1];
                 if (line.startsWith('LOCATION')) current.location = line.split(':')[1];
                 if (line.startsWith('UID')) current.uid = line.split(':')[1];
@@ -262,12 +262,39 @@
         return events;
     }
 
-    function parseICSDate(str) {
-        const year = +str.substring(0, 4);
-        const month = +str.substring(4, 6) - 1;
-        const day = +str.substring(6, 8);
-        const hour = +str.substring(9, 11);
-        const minute = +str.substring(11, 13);
+    // ✅ Correction ici : détection du fuseau et conversion UTC → local
+    function parseICSDate(line) {
+        const [meta, value] = line.split(':');
+        if (!value) return null;
+
+        // Format UTC (finit par Z)
+        if (value.endsWith('Z')) {
+            const year = +value.slice(0, 4);
+            const month = +value.slice(4, 6) - 1;
+            const day = +value.slice(6, 8);
+            const hour = +value.slice(9, 11);
+            const minute = +value.slice(11, 13);
+            // On crée la date en UTC, JS la convertira en locale automatiquement
+            return new Date(Date.UTC(year, month, day, hour, minute));
+        }
+
+        // Format avec fuseau horaire explicite (Europe/Paris)
+        if (meta.includes('TZID=Europe/Paris')) {
+            const year = +value.slice(0, 4);
+            const month = +value.slice(4, 6) - 1;
+            const day = +value.slice(6, 8);
+            const hour = +value.slice(9, 11);
+            const minute = +value.slice(11, 13);
+            // Pas besoin de conversion, c’est déjà local
+            return new Date(year, month, day, hour, minute);
+        }
+
+        // Sinon, on suppose que c’est une heure locale
+        const year = +value.slice(0, 4);
+        const month = +value.slice(4, 6) - 1;
+        const day = +value.slice(6, 8);
+        const hour = +value.slice(9, 11);
+        const minute = +value.slice(11, 13);
         return new Date(year, month, day, hour, minute);
     }
 
@@ -324,9 +351,8 @@
             const eventsContainer = document.createElement('div');
             eventsContainer.className = 'events-container';
 
-            const dayEvents = events.filter(e => {
-                return e.start.toDateString() === date.toDateString();
-            }).sort((a, b) => a.start - b.start);
+            const dayEvents = events.filter(e => e.start.toDateString() === date.toDateString())
+                                   .sort((a, b) => a.start - b.start);
 
             if (dayEvents.length === 0) {
                 const noEvents = document.createElement('div');
@@ -375,6 +401,7 @@
         displayWeek(allEvents, currentWeek);
     });
 </script>
+
 
 </body>
 </html>
