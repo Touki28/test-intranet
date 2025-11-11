@@ -29,19 +29,26 @@
 </header>
 
 <main>
-    <div class="controls">
+	<div class="controls">
     <select id="weekSelector" class="week-select"></select>
   </div>
+
   <div id="calendar"></div>
 
+  <div class="nav-buttons">
+    <button id="prevWeek">← Semaine précédente</button>
+    <button id="nextWeek">Semaine suivante →</button>
+  </div>
+
   <script>
-    // 🔹 Lecture automatique du fichier ICS local
+    let allEvents = [];
+    let currentWeekIndex = 0;
+    let weeks = [];
+
     fetch('emploi.ics')
-      .then(response => response.text())
+      .then(r => r.text())
       .then(parseICS)
       .catch(err => console.error('Erreur de chargement du fichier ICS:', err));
-
-    let allEvents = [];
 
     function parseICS(content) {
       const lines = content.split(/\r?\n/);
@@ -54,9 +61,7 @@
         if (line === 'BEGIN:VEVENT') {
           currentEvent = {};
         } else if (line === 'END:VEVENT') {
-          if (currentEvent && currentEvent.start) {
-            events.push(currentEvent);
-          }
+          if (currentEvent && currentEvent.start) events.push(currentEvent);
           currentEvent = null;
         } else if (currentEvent) {
           if (line.startsWith('DTSTART')) currentEvent.start = parseICSDate(line);
@@ -71,22 +76,19 @@
       initWeeks();
     }
 
-    // 🔹 Gestion du décalage horaire (UTC ou Europe/Paris)
     function parseICSDate(line) {
       const [meta, value] = line.split(':');
       if (!value) return null;
 
-      // Si UTC (termine par Z)
       if (value.endsWith('Z')) {
         const year = +value.slice(0, 4);
         const month = +value.slice(4, 6) - 1;
         const day = +value.slice(6, 8);
         const hour = +value.slice(9, 11);
         const minute = +value.slice(11, 13);
-        return new Date(Date.UTC(year, month, day, hour, minute)); // converti en local
+        return new Date(Date.UTC(year, month, day, hour, minute));
       }
 
-      // Si fuseau horaire Europe/Paris
       if (meta.includes('TZID=Europe/Paris')) {
         const year = +value.slice(0, 4);
         const month = +value.slice(4, 6) - 1;
@@ -96,7 +98,6 @@
         return new Date(year, month, day, hour, minute);
       }
 
-      // Sinon, on suppose heure locale
       const year = +value.slice(0, 4);
       const month = +value.slice(4, 6) - 1;
       const day = +value.slice(6, 8);
@@ -106,7 +107,7 @@
     }
 
     function initWeeks() {
-      const weeks = [...new Set(allEvents.map(ev => getWeekNumber(ev.start)))].sort((a, b) => a - b);
+      weeks = [...new Set(allEvents.map(ev => getWeekNumber(ev.start)))].sort((a, b) => a - b);
       const selector = document.getElementById('weekSelector');
       selector.innerHTML = weeks.map(w => `<option value="${w}">Semaine ${w}</option>`).join('');
       selector.addEventListener('change', () => showWeek(parseInt(selector.value)));
@@ -122,10 +123,11 @@
     }
 
     function showWeek(weekNum) {
+      currentWeekIndex = weeks.indexOf(weekNum);
       const calendar = document.getElementById('calendar');
       calendar.innerHTML = '';
-      const weekEvents = allEvents.filter(ev => getWeekNumber(ev.start) === weekNum);
 
+      const weekEvents = allEvents.filter(ev => getWeekNumber(ev.start) === weekNum);
       const grouped = {};
       weekEvents.forEach(ev => {
         const key = ev.start.toLocaleDateString('fr-FR');
@@ -139,10 +141,11 @@
 
         const header = document.createElement('div');
         header.className = 'day-header';
-        header.textContent = new Date(events[0].start).toLocaleDateString('fr-FR', {
-          weekday: 'long', day: 'numeric', month: 'long'
-        });
-
+        const dateObj = new Date(events[0].start);
+        header.innerHTML = `
+          <div>${dateObj.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+          <span>${events.length} cours</span>
+        `;
         dayDiv.appendChild(header);
 
         events.forEach(ev => {
@@ -158,7 +161,17 @@
 
         calendar.appendChild(dayDiv);
       }
+
+      document.getElementById('weekSelector').value = weekNum;
     }
+
+    document.getElementById('prevWeek').addEventListener('click', () => {
+      if (currentWeekIndex > 0) showWeek(weeks[currentWeekIndex - 1]);
+    });
+
+    document.getElementById('nextWeek').addEventListener('click', () => {
+      if (currentWeekIndex < weeks.length - 1) showWeek(weeks[currentWeekIndex + 1]);
+    });
 
     function formatTime(date) {
       return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
