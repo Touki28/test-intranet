@@ -4,27 +4,208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Le Calendrier de l'Akatsuki</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <link rel="icon" type="image/png" href="img/Akatsuki-Logo.png"/>
-    <link rel="stylesheet" href="style.css">
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #e94560;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        header p {
+            color: #ddd;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: rgba(15, 52, 96, 0.5);
+        }
+
+        .controls button {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .controls button:hover {
+            background: #c23650;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.4);
+        }
+
+        .week-label {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .day-column {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            border-radius: 12px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #e94560 0%, #c23650 100%);
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 3px solid rgba(0,0,0,0.2);
+        }
+
+        .day-header .day-name {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .day-header .day-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .events-container {
+            padding: 0.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.2) 0%, rgba(15, 52, 96, 0.3) 100%);
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.3) 0%, rgba(15, 52, 96, 0.4) 100%);
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .event-time {
+            font-size: 0.85rem;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+
+        .event-summary {
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+
+        .event-location {
+            font-size: 0.75rem;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .no-events {
+            text-align: center;
+            color: #888;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        .home-btn-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .home-btn-container button {
+            background: #0f3460;
+            color: white;
+            border: 2px solid #e94560;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .home-btn-container button:hover {
+            background: #e94560;
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(15, 52, 96, 0.5);
+            color: #aaa;
+        }
+
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-<script>
-    const SESSION_KEY = "intranet_auth_ok_v2";
-    if(!sessionStorage.getItem(SESSION_KEY)){
-        window.location.href = "login.html";
-    }
-</script>
-
-<a href="secret.html" class="clickable-cloud" aria-label="Lien caché vers la base secrète"></a>
 
 <header>
     <div class="header-content">
-        <div class="header-text">
-            <h1>Le Calendrier de l'Akatsuki</h1>
-            <p>Les Douze Lunes du Nuage Rouge</p>
-        </div>
-        
+        <h1>Le Calendrier de l'Akatsuki</h1>
+        <p>Les Douze Lunes du Nuage Rouge</p>
     </div>
 </header>
 
@@ -194,16 +375,6 @@
         displayWeek(allEvents, currentWeek);
     });
 </script>
-</main>
 
-<div class="home-btn-container">
-    <button onclick="window.location.href='index.html';">
-        Accueil de l'Intranet
-    </button>
-</div>
-
-<footer>
-    <p>&copy; 2025 Akakatsuki Intranet </p>
-</footer>
 </body>
 </html>
