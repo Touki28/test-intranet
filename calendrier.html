@@ -30,230 +30,140 @@
 
 <main>
     <div class="controls">
-    <button id="prevWeek">◀ Semaine précédente</button>
-    <div class="week-label" id="weekLabel">Semaine —</div>
-    <button id="nextWeek">Semaine suivante ▶</button>
+    <select id="weekSelector" class="week-select"></select>
   </div>
-
   <div id="calendar"></div>
 
-<script>
-/* ---------- Helpers: unfold ICS lines (join folded lines) ---------- */
-function unfoldICS(raw) {
-  // Normalize CRLF
-  raw = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  const lines = raw.split('\n');
-  const out = [];
-  for (const line of lines) {
-    if (line.startsWith(' ') || line.startsWith('\t')) {
-      // continuation of previous line: append without the leading space/tab
-      if (out.length) out[out.length - 1] += line.slice(1);
-    } else {
-      out.push(line);
-    }
-  }
-  return out;
-}
+  <script>
+    // 🔹 Lecture automatique du fichier ICS local
+    fetch('emploi.ics')
+      .then(response => response.text())
+      .then(parseICS)
+      .catch(err => console.error('Erreur de chargement du fichier ICS:', err));
 
-/* ---------- Robust parse of ICS date strings ---------- */
-function parseICSDate(fullToken, value) {
-  // fullToken is the entire left side e.g. "DTSTART", "DTSTART;VALUE=DATE", "DTSTART;TZID=Europe/Paris"
-  // value is the RHS e.g. "20250903T060000Z" or "20250903T080000"
-  // If value ends with Z => UTC time -> build Date from Date.UTC
-  // If token contains "TZID=Europe/Paris" -> treat as local (Europe/Paris) -> build local Date
-  // Else treat as floating local time -> new Date(year,month-1,day,h,m,s)
+    let allEvents = [];
 
-  // handle all-day (DATE) -> format YYYYMMDD
-  if (!value) return null;
+    function parseICS(content) {
+      const lines = content.split(/\r?\n/);
+      let events = [];
+      let currentEvent = null;
 
-  // remove possible trailing 'Z' marker
-  const isUTC = value.endsWith('Z');
-  const isDateOnly = /^[0-9]{8}$/.test(value);
-  const y = +value.substring(0,4);
-  const mo = +value.substring(4,6);
-  const d = +value.substring(6,8);
+      for (let line of lines) {
+        line = line.trim();
 
-  let hour = 0, minute = 0, second = 0;
-  if (!isDateOnly) {
-    // time part may start at 9 if there's a 'T'
-    const tIndex = value.indexOf('T');
-    if (tIndex >= 0) {
-      const timePart = value.substring(tIndex+1, isUTC ? value.length-1 : undefined);
-      // time part may be HHMM or HHMMSS
-      if (timePart.length >= 2) hour = +timePart.substring(0,2);
-      if (timePart.length >= 4) minute = +timePart.substring(2,4);
-      if (timePart.length >= 6) second = +timePart.substring(4,6);
-    }
-  }
-
-  // If UTC -> construct via Date.UTC so that toLocaleString shows local equivalent
-  if (isUTC) {
-    return new Date(Date.UTC(y, mo-1, d, hour, minute, second));
-  }
-
-  // If token contains TZID=Europe/Paris treat as local (browser local is likely Europe/Paris for you)
-  if (/TZID=Europe\/Paris/i.test(fullToken)) {
-    // create date considered in local timezone (approximation)
-    return new Date(y, mo-1, d, hour, minute, second);
-  }
-
-  // Default: floating time (no timezone) -> treat as local
-  return new Date(y, mo-1, d, hour, minute, second);
-}
-
-/* ---------- Parse ICS (using unfold) ---------- */
-function parseICS(rawText) {
-  const lines = unfoldICS(rawText);
-  const events = [];
-  let cur = null;
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (line === 'BEGIN:VEVENT') {
-      cur = {};
-      continue;
-    }
-    if (line === 'END:VEVENT') {
-      if (cur && cur.start && cur.summary) {
-        // filter cancelled if UID contains CANCEL? or SUMMARY contains "Annulé" etc if you want
-        events.push(cur);
+        if (line === 'BEGIN:VEVENT') {
+          currentEvent = {};
+        } else if (line === 'END:VEVENT') {
+          if (currentEvent && currentEvent.start) {
+            events.push(currentEvent);
+          }
+          currentEvent = null;
+        } else if (currentEvent) {
+          if (line.startsWith('DTSTART')) currentEvent.start = parseICSDate(line);
+          else if (line.startsWith('DTEND')) currentEvent.end = parseICSDate(line);
+          else if (line.startsWith('SUMMARY')) currentEvent.summary = line.split(':')[1];
+          else if (line.startsWith('LOCATION')) currentEvent.location = line.split(':')[1];
+          else if (line.startsWith('DESCRIPTION')) currentEvent.description = line.split(':')[1];
+        }
       }
-      cur = null;
-      continue;
+
+      allEvents = events.sort((a, b) => a.start - b.start);
+      initWeeks();
     }
-    if (!cur) continue;
 
-    // Split at first ':' to get left token and value (take care of lines with extra colons in value)
-    const firstColon = line.indexOf(':');
-    if (firstColon === -1) continue;
-    const left = line.substring(0, firstColon);
-    const value = line.substring(firstColon + 1);
+    // 🔹 Gestion du décalage horaire (UTC ou Europe/Paris)
+    function parseICSDate(line) {
+      const [meta, value] = line.split(':');
+      if (!value) return null;
 
-    // handle keys with params like DTSTART;TZID=..., SUMMARY;LANGUAGE=fr, etc.
-    const key = left.split(';')[0].toUpperCase();
+      // Si UTC (termine par Z)
+      if (value.endsWith('Z')) {
+        const year = +value.slice(0, 4);
+        const month = +value.slice(4, 6) - 1;
+        const day = +value.slice(6, 8);
+        const hour = +value.slice(9, 11);
+        const minute = +value.slice(11, 13);
+        return new Date(Date.UTC(year, month, day, hour, minute)); // converti en local
+      }
 
-    if (key === 'DTSTART') {
-      cur.start = parseICSDate(left, value);
-    } else if (key === 'DTEND') {
-      cur.end = parseICSDate(left, value);
-    } else if (key === 'SUMMARY') {
-      cur.summary = value;
-    } else if (key === 'LOCATION') {
-      cur.location = value;
-    } else if (key === 'DESCRIPTION') {
-      cur.description = value;
-    } else if (key === 'UID') {
-      cur.uid = value;
+      // Si fuseau horaire Europe/Paris
+      if (meta.includes('TZID=Europe/Paris')) {
+        const year = +value.slice(0, 4);
+        const month = +value.slice(4, 6) - 1;
+        const day = +value.slice(6, 8);
+        const hour = +value.slice(9, 11);
+        const minute = +value.slice(11, 13);
+        return new Date(year, month, day, hour, minute);
+      }
+
+      // Sinon, on suppose heure locale
+      const year = +value.slice(0, 4);
+      const month = +value.slice(4, 6) - 1;
+      const day = +value.slice(6, 8);
+      const hour = +value.slice(9, 11);
+      const minute = +value.slice(11, 13);
+      return new Date(year, month, day, hour, minute);
     }
-  }
 
-  // sort by start time
-  events.sort((a,b) => a.start - b.start);
-  return events;
-}
-
-/* ---------- Week utilities ---------- */
-function getWeekNumber(date) {
-  // ISO week number (works with local Date objects)
-  const tmp = new Date(date.getTime());
-  tmp.setHours(0,0,0,0);
-  // Thursday in current week decides the year.
-  tmp.setDate(tmp.getDate() + 4 - (tmp.getDay()||7));
-  const yearStart = new Date(tmp.getFullYear(),0,1);
-  return Math.ceil((((tmp - yearStart) / 86400000) + 1)/7);
-}
-
-function groupByDay(events) {
-  const grouped = {};
-  for (const ev of events) {
-    const dayKey = ev.start.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-    if (!grouped[dayKey]) grouped[dayKey] = [];
-    grouped[dayKey].push(ev);
-  }
-  return grouped;
-}
-
-/* ---------- Rendering ---------- */
-function formatTime(date) {
-  return date.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
-}
-function formatDateHead(date) {
-  return date.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-}
-
-function displayWeek(events, weekNumber) {
-  const container = document.getElementById('calendar');
-  container.innerHTML = '';
-  const weekEvents = events.filter(e => getWeekNumber(e.start) === weekNumber);
-
-  document.getElementById('weekLabel').textContent = weekEvents.length ? ('Semaine ' + weekNumber) : ('Semaine ' + weekNumber + ' — vide');
-
-  if (!weekEvents.length) {
-    container.innerHTML = '<div class="empty">Aucun cours pour cette semaine.</div>';
-    return;
-  }
-
-  const grouped = groupByDay(weekEvents);
-  for (const dayKey of Object.keys(grouped)) {
-    const dayEvents = grouped[dayKey];
-    const dayDiv = document.createElement('div');
-    dayDiv.className = 'day';
-    const h2 = document.createElement('h2');
-    h2.textContent = dayKey + ' — ' + formatDateHead(dayEvents[0].start).split(',').slice(1).join(',').trim();
-    dayDiv.appendChild(h2);
-
-    dayEvents.forEach(ev => {
-      const evDiv = document.createElement('div');
-      evDiv.className = 'event';
-      evDiv.innerHTML = `
-        <div class="time">${formatTime(ev.start)} — ${formatTime(ev.end || ev.start)}</div>
-        <div class="summary">${escapeHtml(ev.summary || '')}</div>
-        ${ev.location ? `<div class="location">📍 ${escapeHtml(ev.location)}</div>` : ''}
-      `;
-      dayDiv.appendChild(evDiv);
-    });
-    container.appendChild(dayDiv);
-  }
-}
-
-/* safe small escape */
-function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-/* ---------- Load ICS and hook buttons ---------- */
-let allEvents = [];
-let currentWeek = null;
-
-fetch('emploi.ics')
-  .then(r => {
-    if (!r.ok) throw new Error('fetch error ' + r.status);
-    return r.text();
-  })
-  .then(txt => {
-    allEvents = parseICS(txt);
-    if (!allEvents.length) {
-      document.getElementById('calendar').innerHTML = '<div class="empty">Aucun événement trouvé dans le fichier ICS.</div>';
-      return;
+    function initWeeks() {
+      const weeks = [...new Set(allEvents.map(ev => getWeekNumber(ev.start)))].sort((a, b) => a - b);
+      const selector = document.getElementById('weekSelector');
+      selector.innerHTML = weeks.map(w => `<option value="${w}">Semaine ${w}</option>`).join('');
+      selector.addEventListener('change', () => showWeek(parseInt(selector.value)));
+      showWeek(weeks[0]);
     }
-    // choose week of first event as initial
-    currentWeek = getWeekNumber(allEvents[0].start);
-    displayWeek(allEvents, currentWeek);
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById('calendar').innerHTML = '<div class="empty">Erreur chargement ICS — regarde la console.</div>';
-  });
 
-document.getElementById('prevWeek').addEventListener('click', () => {
-  if (currentWeek === null) return;
-  currentWeek--;
-  displayWeek(allEvents, currentWeek);
-});
-document.getElementById('nextWeek').addEventListener('click', () => {
-  if (currentWeek === null) return;
-  currentWeek++;
-  displayWeek(allEvents, currentWeek);
-});
-</script>
+    function getWeekNumber(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+      const yearStart = new Date(d.getFullYear(), 0, 1);
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function showWeek(weekNum) {
+      const calendar = document.getElementById('calendar');
+      calendar.innerHTML = '';
+      const weekEvents = allEvents.filter(ev => getWeekNumber(ev.start) === weekNum);
+
+      const grouped = {};
+      weekEvents.forEach(ev => {
+        const key = ev.start.toLocaleDateString('fr-FR');
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(ev);
+      });
+
+      for (const [day, events] of Object.entries(grouped)) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'day';
+
+        const header = document.createElement('div');
+        header.className = 'day-header';
+        header.textContent = new Date(events[0].start).toLocaleDateString('fr-FR', {
+          weekday: 'long', day: 'numeric', month: 'long'
+        });
+
+        dayDiv.appendChild(header);
+
+        events.forEach(ev => {
+          const eDiv = document.createElement('div');
+          eDiv.className = 'event';
+          eDiv.innerHTML = `
+            <div class="event-time">${formatTime(ev.start)} - ${formatTime(ev.end)}</div>
+            <div class="event-subject">${ev.summary || 'Cours'}</div>
+            ${ev.location ? `<div class="event-details">📍 ${ev.location}</div>` : ''}
+          `;
+          dayDiv.appendChild(eDiv);
+        });
+
+        calendar.appendChild(dayDiv);
+      }
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    }
+  </script>
 </main>
 
 <div class="home-btn-container">
