@@ -141,27 +141,6 @@
             font-style: italic;
         }
 
-        .home-btn-container {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .home-btn-container button {
-            background: #0f3460;
-            color: white;
-            border: 2px solid #e94560;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .home-btn-container button:hover {
-            background: #e94560;
-            transform: scale(1.05);
-        }
-
         @media (max-width: 1200px) {
             .calendar-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -197,7 +176,7 @@
 </main>
 
 <div class="home-btn-container">
-    <button onclick="alert('Retour à l\'accueil')">
+    <button onclick="window.location.href='index.html';">
         Accueil de l'Intranet
     </button>
 </div>
