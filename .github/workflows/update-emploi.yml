@@ -16,14 +16,12 @@ jobs:
       - name: 🛎️ Cloner le dépôt
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_PAT || github.token }}
           fetch-depth: 0
       
       - name: 📥 Télécharger le fichier ICS
         run: |
           curl -L -o emploi.ics "https://hplanning.univ-lehavre.fr/Telechargements/ical/Edt_INFOG2.ics?version=2022.0.5.0&idICal=44AB2688C2CC0095C8BC88B7F49766AD&param=643d5b312e2e36325d2666683d3126663d31"
           
-          # Vérifier que le téléchargement a réussi
           if [ ! -s emploi.ics ]; then
             echo "❌ Erreur: le fichier téléchargé est vide"
             exit 1
@@ -32,14 +30,14 @@ jobs:
           echo "✅ Fichier téléchargé avec succès ($(wc -l < emploi.ics) lignes)"
       
       - name: 💾 Commit et push si modification
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Ajouter le fichier
           git add emploi.ics
           
-          # Vérifier s'il y a des changements
           if git diff --staged --quiet; then
             echo "ℹ️ Aucune modification détectée"
           else
@@ -49,7 +47,8 @@ jobs:
 Fichier mis à jour le $(date +'%d/%m/%Y à %H:%M:%S')
 Taille: $(wc -l < emploi.ics) lignes"
             
-            echo "📤 Push vers le dépôt..."
-            git push
+            # Configurer le remote avec le PAT pour push
+            git remote set-url origin https://x-access-token:$GH_PAT@github.com/${{ github.repository }}.git
+            git push origin main
             echo "✅ Mise à jour terminée avec succès!"
           fi
