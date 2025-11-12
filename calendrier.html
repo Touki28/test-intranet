@@ -99,6 +99,16 @@
             cursor: pointer;
         }
 
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: rgba(15, 52, 96, 0.5);
+        }
+
+
         .event-card:hover {
             background: linear-gradient(135deg, rgba(233, 69, 96, 0.3) 0%, rgba(15, 52, 96, 0.4) 100%);
             transform: translateX(5px);
@@ -132,10 +142,7 @@
             font-style: italic;
         }
 
-		.home-btn-container button:hover {
-		background: #d32f2f;
-		transform: scale(1.05);
-	}
+	
 
         @media (max-width: 1200px) {
             .calendar-grid {
@@ -309,7 +316,7 @@
             if (dayEvents.length === 0) {
                 const noEvents = document.createElement('div');
                 noEvents.className = 'no-events';
-                noEvents.textContent = 'Le sang à assez coulé';
+                noEvents.textContent = 'Le sang a assez coulé';
                 eventsContainer.appendChild(noEvents);
             } else {
                 dayEvents.forEach(ev => {
