@@ -3,7 +3,7 @@ name: 🔄 Mise à jour automatique de l'emploi du temps
 on:
   schedule:
     - cron: '0 */6 * * *'  # toutes les 6 heures
-  workflow_dispatch:      # permet un déclenchement manuel
+  workflow_dispatch:        # permet aussi de lancer manuellement
 
 jobs:
   update-emploi:
