@@ -288,10 +288,6 @@ button:hover {
 	transform: scale(1.05);
 }
 
-button:hover {
-    filter: brightness(1.2);
-}
-
 /* ========================================================== */
 /* STYLES SPÉCIFIQUES À SECRET.HTML */
 /* ========================================================== */
