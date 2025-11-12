@@ -132,7 +132,7 @@
             font-style: italic;
         }
 
-		.button:hover {
+		.home-btn-container button:hover {
 		background: #d32f2f;
 		transform: scale(1.05);
 	}
@@ -309,7 +309,7 @@
             if (dayEvents.length === 0) {
                 const noEvents = document.createElement('div');
                 noEvents.className = 'no-events';
-                noEvents.textContent = 'Pas de cours';
+                noEvents.textContent = 'Le sang à assez coulé';
                 eventsContainer.appendChild(noEvents);
             } else {
                 dayEvents.forEach(ev => {
