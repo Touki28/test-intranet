@@ -2,8 +2,8 @@ name: 🔄 Mise à jour automatique de l'emploi du temps
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Toutes les 6 heures
-  workflow_dispatch:  # Permet aussi de lancer manuellement
+    - cron: '0 */6 * * *'  # toutes les 6 heures
+  workflow_dispatch:      # permet un déclenchement manuel
 
 jobs:
   update-emploi:
@@ -26,7 +26,8 @@ jobs:
           git add emploi.ics
           if ! git diff --cached --quiet; then
             git commit -m "Mise à jour automatique du fichier emploi.ics"
-            git remote set-url origin https://x-access-token:$GH_PAT@github.com/Touki28/test-intranet.git
+            git remote set-url origin https://x-access-token:$GH_PAT@github.com/${{ github.repository }}.git
             git push origin main
           else
             echo "Aucune modification détectée"
+          fi
