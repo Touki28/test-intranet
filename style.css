@@ -283,11 +283,6 @@ button:hover {
     transition: 0.2s;
 }
 
-.home-btn-container button:hover {
-	background: #f1392b;
-	transform: scale(1.05);
-}
-
 /* ========================================================== */
 /* STYLES SPÉCIFIQUES À SECRET.HTML */
 /* ========================================================== */
