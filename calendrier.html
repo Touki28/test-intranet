@@ -168,7 +168,6 @@
         <button id="prevWeek">◀ Semaine précédente</button>
         <span class="week-label" id="weekLabel"></span>
         <button id="nextWeek">Semaine suivante ▶</button>
-		<button id="refreshICS">🔄 Rafraîchir depuis HyperPlanning</button>
     </div>
     
     <div class="calendar-grid" id="calendar"></div>
@@ -334,22 +333,6 @@
             container.appendChild(dayColumn);
         });
     }
-
-document.getElementById('refreshICS').addEventListener('click', async () => {
-    const url = "https://hplanning.univ-lehavre.fr/Telechargements/ical/Edt_INFOG2.ics?version=2022.0.5.0&idICal=44AB2688C2CC0095C8BC88B7F49766AD&param=643d5b312e2e36325d2666683d3126663d31";
-    try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Erreur de téléchargement du fichier ICS");
-        const icsText = await res.text();
-        const events = parseICS(icsText);
-        allEvents = events.sort((a, b) => a.start - b.start);
-        displayWeek(allEvents, currentWeek);
-        alert("✅ Emploi du temps mis à jour depuis HyperPlanning !");
-    } catch (err) {
-        console.error(err);
-        alert("❌ Échec de la mise à jour depuis HyperPlanning");
-    }
-});
 
     let allEvents = [];
     let currentWeek = null;
