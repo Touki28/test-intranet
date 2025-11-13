@@ -1,164 +1,165 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les Membres de l'Akatsuki</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Les Membres de l'Akatsuki</title>
 
-    <link rel="icon" type="image/png" href="img/Akatsuki-Logo.png"/>
-    <link rel="stylesheet" href="style.css">
+	<script>
+		const SESSION_KEY = "intranet_auth_ok_v2";
+		if(!sessionStorage.getItem(SESSION_KEY)){
+			window.location.href = "login.html";
+		}
+	</script>
+
+	<link rel="icon" type="image/png" href="img/Akatsuki-Logo.png"/>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<script>
-    const SESSION_KEY = "intranet_auth_ok_v2";
-    if(!sessionStorage.getItem(SESSION_KEY)){
-        window.location.href = "login.html";
-    }
-</script>
+
 
 <a href="secret.html" class="clickable-cloud" aria-label="Lien caché vers la base secrète"></a>
 
 <header>
-    <div class="header-content">
-        <div class="header-text">
-            <h1>Les Membres de l'Akatsuki</h1>
-            <p>Levez l'étendard de la justice divine.</p>
-        </div>
-        
-    </div>
+	<div class="header-content">
+		<div class="header-text">
+			<h1>Les Membres de l'Akatsuki</h1>
+			<p>Levez l'étendard de la justice divine.</p>
+		</div>
+	</div>
 </header>
 
 <main>
-    <section class="team">
-        
-        <article class="member">
-            <h2>Pain Perdu</h2>
-            <img src="img/Pain.jpg" alt="Pain, Leader de l'Akatsuki">
-            <p><strong>Vrai Nom :</strong> Leheurteur Maxence</p>
-            <p><strong>Techniques :</strong> Rinnegan, Cheveux roux</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>A créé le site et le Discord</li>
-                <li>A inventé la technique secrète</li>
-                <li>Infiltre le CROUS</li>
-            </ul>
-        </article>
+	<section class="team">
+		
+		<article class="member">
+			<h2>Pain Perdu</h2>
+			<img src="img/Pain.jpg" alt="Pain, Leader de l'Akatsuki">
+			<p><strong>Vrai Nom :</strong> Leheurteur Maxence</p>
+			<p><strong>Techniques :</strong> Rinnegan, Cheveux roux</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>A créé le site et le Discord</li>
+				<li>A inventé la technique secrète</li>
+				<li>Infiltre le CROUS</li>
+			</ul>
+		</article>
 
-        <article class="member">
-            <h2>Konass</h2>
-            <img src="img/Konan.jpg" alt="Konan, l'Ange de Papier">
-            <p><strong>Vrai Nom :</strong> Lepiller Floriane</p>
-            <p><strong>Techniques :</strong> Manipulation de papier, Catcheuse</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>Unique femme membre de l'Akatsuki.</li>
-                <li>Ne sait pas conduire</li>
-                <li>Regarde du catch et GTA RP</li>
-            </ul>
-        </article>
+		<article class="member">
+			<h2>Konass</h2>
+			<img src="img/Konan.jpg" alt="Konan, l'Ange de Papier">
+			<p><strong>Vrai Nom :</strong> Lepiller Floriane</p>
+			<p><strong>Techniques :</strong> Manipulation de papier, Catcheuse</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>Unique femme membre de l'Akatsuki.</li>
+				<li>Ne sait pas conduire</li>
+				<li>Regarde du catch et GTA RP</li>
+			</ul>
+		</article>
 
-        <article class="member">
-            <h2>Itachibre Uchiha</h2>
-            <img src="img/Itachi.jpg" alt="Itachi Uchiha">
-            <p><strong>Vrai Nom :</strong> Cantoni Bastien</p>
-            <p><strong>Techniques :</strong> Mangekyō Sharingan, Feminisme, taper frais</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>Est amoureux de Billie Eilish</li>
-                <li>Est le plus grand des Feministe</li>
-                <li>Son Sharingan lui permet de voir tous les culs aux environs</li>
-            </ul>
-        </article>
-        
-        <article class="member">
-            <h2>Kisamerde Hoshigaki</h2>
-            <img src="img/Kisame.jpg" alt="Kisame Hoshigaki">
-            <p><strong>Vrai Nom :</strong> Girard-Fourneaux Liam</p>
-            <p><strong>Techniques :</strong> Affinités Suiton, Épée Samehada, Super Gaulois</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>Est le meilleur Gaulois</li>
-                <li>Vit dans le noir depuis 2 ans et demi</li>
-                <li>A attaqué une mosquée avec du pâté et du taboulé</li>
-            </ul>
-        </article>
-        
-        <article class="member">
-            <h2>Deidarabe</h2>
-            <img src="img/Deidara.jpg" alt="Deidara, l'artiste">
-            <p><strong>Vrai Nom :</strong> Leroy Valentin</p>
-            <p><strong>Techniques :</strong> Argile Explosive (Katsu), Tricheurs, fait du beatbox</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>A été attrapé en train de tricher</li>
-                <li>A acheté une trottinette à 500€</li>
-                <li>A organisé le 11 Septembre</li>
-            </ul>
-        </article>
-        
-        <article class="member">
-            <h2>Sassoumi</h2>
-            <img src="img/Sasori.jpg" alt="Sasori du Sable Rouge">
-            <p><strong>Vrai Nom :</strong> Hazet Alex</p>
-            <p><strong>Techniques :</strong> Marionnettiste Maître, Escalade, peut monter à 100%</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>A escaladé le mont Everest avec Inoxtag</li>
-                <li>A masterisé Linux</li>
-                <li>Est bon à JKLM</li>
-            </ul>
-        </article>
-        
-        <article class="member">
-            <h2>Orochipartout </h2>
-            <img src="img/Orochimaru.jpg" alt="Orochimaru, le Sannin légendaire">
-            <p><strong>Vrai Nom :</strong> Morvan Quentin</p>
-            <p><strong>Techniques :</strong> Immortalité, Technique de la Réincarnation, Invocation de Neymar Junior, bon au foot</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>Joue à FC frileuse</li>
-                <li>A créé Ray Dark</li>
-                <li>Silencieux comme le vent</li>
-            </ul>
-        </article>
-        
-        <article class="member">
-            <h2>Grobito Uchiha (Tobi)</h2>
-            <img src="img/Obito.jpg" alt="Obito Uchiha, le masque"> 
-            <p><strong>Vrai Nom :</strong> Elmaknasi Lucas</p>
-            <p><strong>Techniques :</strong> Mangekyō Sharingan (Kamui), Rinnegan, Maître des Larves</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>A géré une Coréenne de 24 ans</li>
-                <li>S'est fait attaquer par des larves</li>
-                <li>A dupliqué des escabeaux</li>
-            </ul>
-        </article>
+		<article class="member">
+			<h2>Itachibre Uchiha</h2>
+			<img src="img/Itachi.jpg" alt="Itachi Uchiha">
+			<p><strong>Vrai Nom :</strong> Cantoni Bastien</p>
+			<p><strong>Techniques :</strong> Mangekyō Sharingan, Feminisme, taper frais</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>Est amoureux de Billie Eilish</li>
+				<li>Est le plus grand des Feministe</li>
+				<li>Son Sharingan lui permet de voir tous les culs aux environs</li>
+			</ul>
+		</article>
+		
+		<article class="member">
+			<h2>Kisamerde Hoshigaki</h2>
+			<img src="img/Kisame.jpg" alt="Kisame Hoshigaki">
+			<p><strong>Vrai Nom :</strong> Girard-Fourneaux Liam</p>
+			<p><strong>Techniques :</strong> Affinités Suiton, Épée Samehada, Super Gaulois</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>Est le meilleur Gaulois</li>
+				<li>Vit dans le noir depuis 2 ans et demi</li>
+				<li>A attaqué une mosquée avec du pâté et du taboulé</li>
+			</ul>
+		</article>
+		
+		<article class="member">
+			<h2>Deidarabe</h2>
+			<img src="img/Deidara.jpg" alt="Deidara, l'artiste">
+			<p><strong>Vrai Nom :</strong> Leroy Valentin</p>
+			<p><strong>Techniques :</strong> Argile Explosive (Katsu), Tricheurs, fait du beatbox</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>A été attrapé en train de tricher</li>
+				<li>A acheté une trottinette à 500€</li>
+				<li>A organisé le 11 Septembre</li>
+			</ul>
+		</article>
+		
+		<article class="member">
+			<h2>Sassoumi</h2>
+			<img src="img/Sasori.jpg" alt="Sasori du Sable Rouge">
+			<p><strong>Vrai Nom :</strong> Hazet Alex</p>
+			<p><strong>Techniques :</strong> Marionnettiste Maître, Escalade, peut monter à 100%</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>A escaladé le mont Everest avec Inoxtag</li>
+				<li>A masterisé Linux</li>
+				<li>Est bon à JKLM</li>
+			</ul>
+		</article>
+		
+		<article class="member">
+			<h2>Orochipartout </h2>
+			<img src="img/Orochimaru.jpg" alt="Orochimaru, le Sannin légendaire">
+			<p><strong>Vrai Nom :</strong> Morvan Quentin</p>
+			<p><strong>Techniques :</strong> Immortalité, Technique de la Réincarnation, Invocation de Neymar Junior, bon au foot</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>Joue à FC frileuse</li>
+				<li>A créé Ray Dark</li>
+				<li>Silencieux comme le vent</li>
+			</ul>
+		</article>
+		
+		<article class="member">
+			<h2>Grobito Uchiha (Tobi)</h2>
+			<img src="img/Obito.jpg" alt="Obito Uchiha, le masque"> 
+			<p><strong>Vrai Nom :</strong> Elmaknasi Lucas</p>
+			<p><strong>Techniques :</strong> Mangekyō Sharingan (Kamui), Rinnegan, Maître des Larves</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>A géré une Coréenne de 24 ans</li>
+				<li>S'est fait attaquer par des larves</li>
+				<li>A dupliqué des escabeaux</li>
+			</ul>
+		</article>
 
-        <article class="member">
-            <h2>Kakakuzu</h2>
-            <img src="img/Kakuzu.jpg" alt="Kakuzu, le Trésorier de l'Akatsuki">
-            <p><strong>Vrai Nom :</strong> Dumont Enzo</p>
-            <p><strong>Techniques :</strong> Jiongu (Filaments noirs), Maîtrise des cinq éléments, Alcoolisme</p>
-            <p><strong>Palmarès :</strong></p>
-            <ul>
-                <li>A gravi les échelons jusqu'à l'Akatsuki</li>
-                <li>Se détruit le foie et les poumons tous les Jeudi et Vendredi</li>
-                <li>Les lunettes à Shrek</li>
-            </ul>
-        </article>
-        
-    </section>
+		<article class="member">
+			<h2>Kakakuzu</h2>
+			<img src="img/Kakuzu.jpg" alt="Kakuzu, le Trésorier de l'Akatsuki">
+			<p><strong>Vrai Nom :</strong> Dumont Enzo</p>
+			<p><strong>Techniques :</strong> Jiongu (Filaments noirs), Maîtrise des cinq éléments, Alcoolisme</p>
+			<p><strong>Palmarès :</strong></p>
+			<ul>
+				<li>A gravi les échelons jusqu'à l'Akatsuki</li>
+				<li>Se détruit le foie et les poumons tous les Jeudi et Vendredi</li>
+				<li>Les lunettes à Shrek</li>
+			</ul>
+		</article>
+		
+	</section>
 </main>
 
 <div class="home-btn-container">
-    <button onclick="window.location.href='index.html';">
-        Accueil de l'Intranet
-    </button>
+	<button onclick="window.location.href='index.html';">
+		Accueil de l'Intranet
+	</button>
 </div>
 
 <footer>
-    <p>&copy; 2025 Akakatsuki Intranet </p>
+	<p>&copy; 2025 Akakatsuki Intranet </p>
 </footer>
 </body>
 </html>
